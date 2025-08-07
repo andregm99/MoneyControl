@@ -4,9 +4,14 @@ import { PublicStackParamsList } from '@/routes/PublicRoutes'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useForm } from 'react-hook-form'
-import { Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './schema'
+import { useAuthContext } from '@/context/auth.context'
+import { AxiosError } from 'axios'
+import { FormLoginParams } from '@/screens/Login/LoginForm'
+import { useErrorHandler } from '@/shared/hooks/useErrorHandler'
+import { colors } from '@/shared/colors'
 
 export interface RegisterFormParams {
   name: string
@@ -31,8 +36,18 @@ export const RegisterForm = () => {
       })
 
       const navigation = useNavigation<StackNavigationProp<PublicStackParamsList>>()
-        const onSubmit = async () => {
-    
+
+      const {handleRegister} = useAuthContext()// Acessando o contexto de registro.
+
+      const {handleError} = useErrorHandler()
+
+
+        const onSubmit = async (userData:RegisterFormParams) => {
+            try {
+              await handleRegister(userData)
+            } catch (error) {
+              handleError(error,"Falha ao realizar cadastro")
+            }
         }
 
     return (
@@ -74,7 +89,9 @@ export const RegisterForm = () => {
 
 
                 <View className="flex-1 justify-between mt-8 mb-6 min-h-[230px]">
-                        <AppButton onPress={handleSubmit(onSubmit)} iconName="arrow-forward">Cadastrar</AppButton>
+                        <AppButton onPress={handleSubmit(onSubmit)} iconName="arrow-forward">
+                           {isSubmitting ? <ActivityIndicator color={colors.white}/> : "Login"}
+                        </AppButton>
                 
                         <View>
                           <Text className="mb-6 text-gray-300 text-base">
