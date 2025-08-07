@@ -42,7 +42,7 @@ export const AppInput = <T extends FieldValues>({
       control={control}
       name={name}
       render={({ field: { onChange, value,},fieldState:{error} }) => {
-        console.log(error)
+       
         return (
           <View className="w-full mt-5">
             {label && 

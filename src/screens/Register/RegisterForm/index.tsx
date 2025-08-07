@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './schema'
+
 export interface RegisterFormParams {
   name: string
   email: string
